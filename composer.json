@@ -1,0 +1,23 @@
+{
+    "name": "phpbook/validation",
+    "type": "library",
+    "description": "PHP Validation Library",
+    "keywords": ["php","validation", "fast", "lightweight"],
+    "homepage": "https://github.com/phpbook-sources/validation",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "PHPBook",
+            "email": "phpbook@programmer.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPBook\\Validation\\": "library/"
+        }
+    }
+}
