@@ -27,7 +27,7 @@
 /* the example messages below are the default messages */
 
 \PHPBook\Validation\Configuration\Message::setLabel('values:attrs', 'The count of values and attributes must match');
-\PHPBook\Validation\Configuration\Message::setLabel('attr:exists', 'The attribute {attribute} does not exist');
+\PHPBook\Validation\Configuration\Message::setLabel('attr:exists', 'The attribute alias {attribute} does not exist');
 \PHPBook\Validation\Configuration\Message::setLabel('type:string', '{label} must be a string');
 \PHPBook\Validation\Configuration\Message::setLabel('type:integer', '{label} must be a integer');
 \PHPBook\Validation\Configuration\Message::setLabel('type:boolean', '{label} must be a boolean');
@@ -97,7 +97,7 @@ class CustomerValidation {
 		->setAttribute('status', [
 			'label' => 'Status',
 			'type' => '@string',
-			'required' => true,
+			'required' => false,
 			'options' => [static::$STATUS_ACTIVE => 'Active', static::$STATUS_INACTIVE => 'Inactive', static::$STATUS_PROCESS => 'Process']
 		])
 		
@@ -120,26 +120,63 @@ class CustomerValidation {
 		->setAttribute('active', [
 			'label' => 'Ativo',
 			'type' => '@boolean',
-			'require' => true
+			'required' => true
 		])
 
 		->setAttribute('date', [
 			'label' => 'Date',
 			'type' => '@date',
-			'require' => true,
+			'required' => true,
 		])
 
 		->setAttribute('datetime', [
 			'label' => 'Date Time',
 			'type' => '@datetime',
-			'require' => true
+			'required' => true
 		])
 
 		->setAttribute('time', [
 			'label' => 'Time',
 			'type' => '@time',
-			'require' => true
-		]);
+			'required' => true
+		])
+
+		->setRule('ageOfJhon', ['name', 'age'], function($name, $age) {
+			
+			/* rules validations are called after the attributes validation */
+			/* rules are always called in validation, even if you dont call any of rules parameters */
+			if (($name) and ($name == 'jhon')) {
+				if (($age) and ($age < 18)) {
+					/* you should throw exception like the basic validation does */
+					throw new Exception('Jhon must be 18 years old or more');
+				};
+			};
+
+		})
+
+		->setRule('anaCantBeHere', ['name'], function($name) {
+
+			/* rules validations are called after the attributes validation */
+			/* rules are always called in validation, even if you dont call any of rules parameters */
+			if (($name) and ($name == 'ana')) {
+				/* you should throw exception like the basic validation does */
+				throw new Exception('What are you doing here Ana?');
+			};
+
+		})
+
+		->setRule('statuRequiredForJhon', ['name', 'status'], function($name, $status) {
+
+			/* rules validations are called after the attributes validation */
+			/* rules are always called in validation, even if you dont call any of rules parameters */
+			if (($name) and ($name == 'jhon')) {
+				if (!$status) {
+					/* you should throw exception like the basic validation does */
+					throw new Exception('Status is required for Jhon');
+				};
+			};
+
+		});
 
 	}
 
@@ -169,15 +206,17 @@ class Customer {
 	
 	function __construct($name, $age) {		
 	
-		/* The validator throws exception when there is an error and variables list will not be returned */
+		/* the validator throws exception when there is an error and variables list will not be returned */
 
-		/* uses only the defined parameters to validate, the others will be ignored */
+		/* validator uses only the defined parameters to validate, the others will be ignored, unless you have a rule validation for completing the information */
+
+		/* Validator provides a uuid attribute option, but the variable value must be null to generate the uuid */
 
 		$customerValidation = new CustomerValidation;
 
 		try {
 
-			list($this->name, $this->age) = $customerValidation->getLayout()->validate([$name, $age], ['name', 'age']);
+			list($this->id, $this->name, $this->age) = $customerValidation->getLayout()->validate([null, $name, $age], ['id', 'name', 'age']);
 
 		} catch(\Exception $e) {
 
@@ -185,33 +224,6 @@ class Customer {
 
 		};
 
-	}
-
-	public function getName() {
-		return $this->name;
-	}
-
-	public function getAge() {
-		return $this->age;
-	}
-
-}
-
-/* Validator provides a uuid attribute option, but the variable value must be null to generate the uuid */
-
-class Customer {
-		
-	function __construct($name, $age) {		
-
-		$customerValidation = new CustomerValidation;
-
-		list($this->id, $this->name, $this->age) = $customerValidation->getLayout()
-			->validate([null, $name, $age], ['id', 'name', 'age']);
-
-	}
-
-	public function getId() {
-		return $this->id;
 	}
 
 	public function getName() {
@@ -234,7 +246,7 @@ foreach($attributes as $name => $attribute) {
 
 	$name; //age
 
-	$attribute; //['type' => '@integer', 'require' => true]
+	$attribute; //['type' => '@integer', 'required' => true]
 	
 };
 

@@ -4,7 +4,7 @@ abstract class Message {
 
 	private static $labels = [
         'values:attrs'  => 'The count of values and attributes must match to validate',
-        'attr:exists'   => 'The attribute {attribute} does not exist',
+        'attr:exists'   => 'The attribute alias {attribute} does not exist',
         'type:string'   => '{label} must be a string',
         'type:integer'  => '{label} must be a integer',
         'type:boolean'  => '{label} must be a boolean',

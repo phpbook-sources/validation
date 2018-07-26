@@ -3,6 +3,8 @@
 class Layout {
 
 	private $attributes = [];
+
+	private $rules = [];
 	
 	public function setAttribute(String $name, Array $attribute): Layout {
 		$this->attributes[$name] = $attribute;
@@ -11,6 +13,15 @@ class Layout {
 
     public function getAttributes(): Array {
 		return $this->attributes;
+	}
+
+	public function setRule(String $name, Array $attributes, \Closure $closure): Layout {
+		$this->rules[] = [$name, $attributes, $closure];
+		return $this;
+	}
+
+    public function getRules(): Array {
+		return $this->rules;
 	}
 
 	private function generateUUID(): String {
@@ -147,7 +158,7 @@ class Layout {
 		foreach($values as $position => $value) {
 
 			if (!array_key_exists($attributes[$position], $this->getAttributes())) {
-				throw new \Exception(Configuration\Message::getLabel('attr:exists'));
+				throw new \Exception(str_replace('{attribute}', $attributes[$position], Configuration\Message::getLabel('attr:exists')));
 			};
 
 			$attribute =  $this->getAttributes()[$attributes[$position]];
@@ -155,6 +166,7 @@ class Layout {
 			$label = array_key_exists('label', $attribute) ? $attribute['label'] : $attributes[$position];
 
 			if (array_key_exists('uuid', $attribute)) {
+
 				if (($attribute['uuid']) and ((!$value) or (strlen($value) == 0))) {
 					$values[$position] = $this->generateUUID();
 					$value = $values[$position];
@@ -205,6 +217,36 @@ class Layout {
 					
 				};
 				
+			};
+
+		};
+
+		foreach($this->getRules() as $position => $rule) {
+			
+			list($ruleName, $ruleAttributes, $ruleClosure) = $rule;
+
+			$ruleValues = [];
+
+			foreach($ruleAttributes as $ruleAttribute) {
+
+				if (!array_key_exists($ruleAttribute, $this->getAttributes())) {
+					throw new \Exception(str_replace('{attribute}', $ruleAttribute, Configuration\Message::getLabel('attr:exists')));
+				};
+
+				if (array_key_exists($ruleAttribute, $values)) {
+
+					$ruleValues[] = $values[$ruleAttribute];
+
+				} else {
+
+					$ruleValues[] = null;
+
+				};
+
+			};
+
+			if ($ruleClosure instanceof \Closure) {
+				call_user_func_array($ruleClosure, $ruleValues);
 			};
 
 		};
