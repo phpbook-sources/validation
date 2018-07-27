@@ -250,6 +250,19 @@ foreach($attributes as $name => $attribute) {
 	
 };
 
+
+/* You can iterate the rules */
+
+$customerValidation = new CustomerValidation;
+
+$rules = $customerValidation->getLayout()->getRules();
+
+foreach($rules as $key => $rule) {
+
+	list($name, $attributes, $closure) = $rule;
+	
+};
+
 ?>
 ```
 - Validation of date, datetime and time follows the international format YYYY-MM-DD H:i:s | YYYY-MM-DD | H:i:s.
