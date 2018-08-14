@@ -66,17 +66,22 @@ class Layout {
 			case '@datetime':
 					$datetime = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
 					if ((!$datetime) or ($datetime->format('Y-m-d H:i:s') !== $value)) {
-						$error = 'date';
+						$error = 'date time';
 					};
 					unset($datetime);
 				break;
 			case '@time':
 					$time = \DateTime::createFromFormat('H:i:s', $value);
 					if ((!$time) or ($time->format('H:i:s') !== $value)) {
-						$error = 'date';
+						$error = 'time';
 					};
 					unset($time);
 				break;
+			case '@file-buffer':
+				if ((is_object($value)) or (is_array($value))) {
+					$error = 'file buffer';
+				};
+			break;
 			case '@array':
 					if (!is_array($value)) {
 						$error = 'array';
@@ -149,6 +154,42 @@ class Layout {
 		};
 	}
 
+	private function validateFileSizeKB($sizeKb, $label, $value) {
+		
+		if (strlen($value) / 1024 > $sizeKb) {
+			throw new \Exception(str_replace(['{label}', '{maxkbs}'], [$label, $sizeKb], Configuration\Message::getLabel('maxkbs')));
+		};
+
+	}
+
+	private function validateFileMime($mimes, $label, $value) {
+
+		$finfo = new \finfo(FILEINFO_MIME);
+
+        $fileMimeType = explode(';', $finfo->buffer($value))[0];
+
+        $fileType = explode('/', $fileMimeType)[0];
+
+		$allows = false;
+
+        foreach($mimes as $validationMimeType) {
+            
+            if (($fileType == $validationMimeType) or ($fileMimeType == $validationMimeType)) {
+
+                $allows = true;
+
+            };
+
+        };
+
+		if (!$allows) {
+			
+			throw new \Exception(str_replace(['{label}'], [$label], Configuration\Message::getLabel('mimes')));
+
+		};
+		
+	}
+
 	public function validate(Array $values, Array $attributes) {
 		
 		if (count($values) != count($attributes)) {
@@ -214,6 +255,18 @@ class Layout {
 				if (array_key_exists('options', $attribute)) {
 	
 					$this->validateOptions($attribute['options'], $label, $value);
+					
+				};
+
+				if (array_key_exists('maxkbs', $attribute)) {
+	
+					$this->validateFileSizeKB($attribute['maxkbs'], $label, $value);
+					
+				};
+
+				if (array_key_exists('mimes', $attribute)) {
+	
+					$this->validateFileMime($attribute['mimes'], $label, $value);
 					
 				};
 				

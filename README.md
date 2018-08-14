@@ -8,6 +8,7 @@
 ### About Validation
 
 - A PHP library for data validations
+- Requires PHP Extension FINFO.
 
 ### Composer Install
 
@@ -42,6 +43,9 @@
 \PHPBook\Validation\Configuration\Message::setLabel('minlength', '{label} must have min {minlength} characters');
 \PHPBook\Validation\Configuration\Message::setLabel('maxlength', '{label} must have max {maxlength} characters');
 \PHPBook\Validation\Configuration\Message::setLabel('options', '{label} must be one of the following options, {options}');
+\PHPBook\Validation\Configuration\Message::setLabel('mimes', '{label} is a not a required file type');
+\PHPBook\Validation\Configuration\Message::setLabel('maxkbs', '{label} max kb size is {maxkbs}');
+
 
 ?>
 ```
@@ -92,6 +96,14 @@ class CustomerValidation {
 			'required' => true,
 			'minlength' => 5,
 			'maxlength' => 120
+		])
+
+		->setAttribute('photo', [
+			'label' => 'Photo',
+			'type' => '@file-buffer',
+			'required' => true,
+			'maxkbs' => 100,
+			'mimes' => ['image']
 		])
 		
 		->setAttribute('status', [
