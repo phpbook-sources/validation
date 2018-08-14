@@ -108,7 +108,7 @@ class Layout {
 
 	private function validateRequired($required, $label, $value) {
 		if ($required) {
-			if ((!$value) or (strlen($value) == 0)) {
+			if (($value == null) or ((is_string($value)) and (strlen($value) == 0))) {
 				throw new \Exception(str_replace('{label}', $label, Configuration\Message::getLabel('required')));
 			};
 		};
