@@ -31,6 +31,7 @@
 \PHPBook\Validation\Configuration\Message::setLabel('attr:exists', 'The attribute alias {attribute} does not exist');
 \PHPBook\Validation\Configuration\Message::setLabel('type:string', '{label} must be a string');
 \PHPBook\Validation\Configuration\Message::setLabel('type:integer', '{label} must be a integer');
+\PHPBook\Validation\Configuration\Message::setLabel('type:float', '{label} must be a float');
 \PHPBook\Validation\Configuration\Message::setLabel('type:boolean', '{label} must be a boolean');
 \PHPBook\Validation\Configuration\Message::setLabel('type:date', '{label} must be a date');
 \PHPBook\Validation\Configuration\Message::setLabel('type:datetime', '{label} must be a datetime');
@@ -88,6 +89,12 @@ class CustomerValidation {
 			'required' => true,
 			'min' => 18,
 			'max' => 100
+		])
+
+		->setAttribute('weight', [
+			'label' => 'Weight',
+			'type' => '@float',
+			'required' => false
 		])
 
 		->setAttribute('name', [
@@ -156,7 +163,7 @@ class CustomerValidation {
 		->setRule('ageOfJhon', ['name', 'age'], function($name, $age) {
 			
 			/* rules validations are called after the attributes validation */
-			/* rules are always called in validation, even if you dont call any of rules parameters */
+			/* rules are always called in validation, even if you dont call any validation of rules parameters */
 			if (($name) and ($name == 'jhon')) {
 				if (($age) and ($age < 18)) {
 					/* you should throw exception like the basic validation does */
@@ -169,7 +176,7 @@ class CustomerValidation {
 		->setRule('anaCantBeHere', ['name'], function($name) {
 
 			/* rules validations are called after the attributes validation */
-			/* rules are always called in validation, even if you dont call any of rules parameters */
+			/* rules are always called in validation, even if you dont call any validation of rules parameters */
 			if (($name) and ($name == 'ana')) {
 				/* you should throw exception like the basic validation does */
 				throw new Exception('What are you doing here Ana?');
@@ -180,7 +187,7 @@ class CustomerValidation {
 		->setRule('statuRequiredForJhon', ['name', 'status'], function($name, $status) {
 
 			/* rules validations are called after the attributes validation */
-			/* rules are always called in validation, even if you dont call any of rules parameters */
+			/* rules are always called in validation, even if you dont call any validation of rules parameters */
 			if (($name) and ($name == 'jhon')) {
 				if (!$status) {
 					/* you should throw exception like the basic validation does */

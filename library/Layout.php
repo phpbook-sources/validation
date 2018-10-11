@@ -51,6 +51,11 @@ class Layout {
 						$error = 'integer';
 					};
 				break;
+			case '@float':
+					if (!is_numeric((string) $value)) {
+						$error = 'float';
+					};
+				break;
 			case '@boolean':
 					if (!is_bool($value)) {
 						$error = 'boolean';

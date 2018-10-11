@@ -7,6 +7,7 @@ abstract class Message {
         'attr:exists'   => 'The attribute alias {attribute} does not exist',
         'type:string'   => '{label} must be a string',
         'type:integer'  => '{label} must be a integer',
+        'type:float'    => '{label} must be a float',
         'type:boolean'  => '{label} must be a boolean',
         'type:date'     => '{label} must be a date',
         'type:datetime' => '{label} must be a date time',
