@@ -285,15 +285,21 @@ class Layout {
 
 			$ruleValues = [];
 
+			$valuesMapped = [];
+			foreach($values as $valueParsePosition => $valueParse) {
+                $valuesMapped[$attributes[$valueParsePosition]] = $valueParse;
+            }
+
 			foreach($ruleAttributes as $ruleAttribute) {
+
 
 				if (!array_key_exists($ruleAttribute, $this->getAttributes())) {
 					throw new \Exception(str_replace('{attribute}', $ruleAttribute, Configuration\Message::getLabel('attr:exists')));
 				};
 
-				if (array_key_exists($ruleAttribute, $values)) {
+				if (array_key_exists($ruleAttribute, $valuesMapped)) {
 
-					$ruleValues[] = $values[$ruleAttribute];
+					$ruleValues[] = $valuesMapped[$ruleAttribute];
 
 				} else {
 
