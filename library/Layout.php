@@ -28,48 +28,50 @@ class Layout {
 
 		if (array_key_exists($name, $this->attributes)) {
 
-			$attributes = $this->attributes[$name];
+            $attributes = $this->attributes[$name];
 
-			$verbose = [];
+            $verbose = [];
 
-			foreach($attributes as $attribute => $value) {
-				switch ($attribute) {
-					case 'required':
-						if ($value) {
-							$verbose[] = str_replace('{label}', $attributes['label'], Configuration\Message::getLabel('required'));
-						};
-						break;
-					case 'type':
-						$verbose[] = str_replace('{label}', $attributes['label'], \PHPBook\Validation\Configuration\Message::getLabel('type:' . $value));
-						break;
-					case 'min':
-						$verbose[] = str_replace(['{label}', '{min}'], [$attributes['label'], $value], Configuration\Message::getLabel('min'));
-						break;
-					case 'max':
-						$verbose[] = str_replace(['{label}', '{max}'], [$attributes['label'], $value], Configuration\Message::getLabel('max'));
-						break;
-					case 'minlength':
-						$verbose[] = str_replace(['{label}', '{minlength}'], [$attributes['label'], $value], Configuration\Message::getLabel('minlength'));
-						break;
-					case 'maxlength':
-						$verbose[] = str_replace(['{label}', '{maxlength}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxlength'));
-						break;
-					case 'options':
-						$verbose[] = str_replace(['{label}', '{options}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('options'));
-						break;
-					case 'mimes':
-						$verbose[] = str_replace(['{label}', '{mimes}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('mimes'));
-						break;
-					case 'maxkbs':
-						$verbose[] = str_replace(['{label}', '{maxkbs}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxkbs'));
-						break;					
-				}
-				
-			};
+            foreach($attributes as $attribute => $value) {
+                switch ($attribute) {
+                    case 'required':
+                        if ($value) {
+                            $verbose[] = str_replace('{label}', $attributes['label'], Configuration\Message::getLabel('required'));
+                        };
+                        break;
+                    case 'type':
+                        $verbose[] = str_replace('{label}', $attributes['label'], \PHPBook\Validation\Configuration\Message::getLabel('type:' . str_replace('@', '', $value)));
+                        break;
+                    case 'min':
+                        $verbose[] = str_replace(['{label}', '{min}'], [$attributes['label'], $value], Configuration\Message::getLabel('min'));
+                        break;
+                    case 'max':
+                        $verbose[] = str_replace(['{label}', '{max}'], [$attributes['label'], $value], Configuration\Message::getLabel('max'));
+                        break;
+                    case 'minlength':
+                        $verbose[] = str_replace(['{label}', '{minlength}'], [$attributes['label'], $value], Configuration\Message::getLabel('minlength'));
+                        break;
+                    case 'maxlength':
+                        $verbose[] = str_replace(['{label}', '{maxlength}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxlength'));
+                        break;
+                    case 'options':
+                        $verbose[] = str_replace(['{label}', '{options}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('options'));
+                        break;
+                    case 'mimes':
+                        $verbose[] = str_replace(['{label}', '{mimes}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('mimes'));
+                        break;
+                    case 'maxkbs':
+                        $verbose[] = str_replace(['{label}', '{maxkbs}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxkbs'));
+                        break;
+                }
 
-			return implode('. ', $verbose);
+            };
 
-		}
+            return implode(', ', $verbose);
+
+        }
+
+        return '';
 
 	}
 
