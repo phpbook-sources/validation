@@ -24,6 +24,90 @@ class Layout {
 		return $this->rules;
 	}
 
+	public function getAttributeVerbose($name): ?string {
+
+		if (array_key_exists($name, $this->attributes) {
+
+			$attributes = $this->attributes[$name];
+
+			$verbose = [];
+
+			foreach($attributes as $attribute => $value) {
+				switch ($attribute) {
+					case 'required':
+						if ($value) {
+							$verbose[] = str_replace('{label}', $attributes['label'], Configuration\Message::getLabel('required'));
+						};
+						break;
+					case 'type':
+						$verbose[] = str_replace('{label}', $attributes['label'], \PHPBook\Validation\Configuration\Message::getLabel('type:' . $value));
+						break;
+					case 'min':
+						$verbose[] = str_replace(['{label}', '{min}'], [$attributes['label'], $value], Configuration\Message::getLabel('min'));
+						break;
+					case 'max':
+						$verbose[] = str_replace(['{label}', '{max}'], [$attributes['label'], $value], Configuration\Message::getLabel('max'));
+						break;
+					case 'minlength':
+						$verbose[] = str_replace(['{label}', '{minlength}'], [$attributes['label'], $value], Configuration\Message::getLabel('minlength'));
+						break;
+					case 'maxlength':
+						$verbose[] = str_replace(['{label}', '{maxlength}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxlength'));
+						break;
+					case 'options':
+						$verbose[] = str_replace(['{label}', '{options}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('options'));
+						break;
+					case 'mimes':
+						$verbose[] = str_replace(['{label}', '{mimes}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('mimes'));
+						break;
+					case 'maxkbs':
+						$verbose[] = str_replace(['{label}', '{maxkbs}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxkbs'));
+						break;					
+				}
+				
+			};
+
+			return implode('. ', $verbose);
+
+		}
+
+
+		/////////
+		$schema = $this->getAttributeSchema($name);
+
+		$verbose = [];
+
+		foreach($schema as $propertie => $value) {
+			switch ($propertie) {
+				case 'required':
+					if ($value) {
+						$verbose[] = str_replace('{label}', $label, Configuration\Message::getLabel('required'));
+					};
+					break;
+				case 'type':
+					$verbose[] = str_replace('{label}', $label, Configuration\Message::getLabel('type:' . $value));
+					break;
+				case 'minlength':
+					$verbose[] = str_replace(['{label}', '{minlength}'], [$label, $value], Configuration\Message::getLabel('minlength'));
+					break;
+				case 'minlength':
+					$verbose[] = str_replace(['{label}', '{minlength}'], [$label, $value], Configuration\Message::getLabel('minlength'));
+					break;
+				case 'maxlength':
+					$verbose[] = str_replace(['{label}', '{maxlength}'], [$label, $value], Configuration\Message::getLabel('maxlength'));
+					break;
+				case 'maxlength':
+					$verbose[] = str_replace(['{label}', '{maxlength}'], [$label, $value], Configuration\Message::getLabel('maxlength'));
+					break;
+				
+			}
+			
+		};
+
+		return implode('. ', $verbose);
+
+	}
+
 	private function generateUUID(): String {
 		return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 			mt_rand(0, 0xffff), mt_rand(0, 0xffff),
@@ -177,7 +261,7 @@ class Layout {
 
 		$allows = false;
 
-        foreach($mimes as $validationMimeType) {
+        foreach($mimes as $validationMimeType => $validationMimeTypeDescription) {
             
             if (($fileType == $validationMimeType) or ($fileMimeType == $validationMimeType)) {
 
@@ -189,7 +273,7 @@ class Layout {
 
 		if (!$allows) {
 			
-			throw new \Exception(str_replace(['{label}'], [$label], Configuration\Message::getLabel('mimes')));
+			throw new \Exception(str_replace(['{label}', '{mimes}'], [$label, implode(', ', $mimes)], Configuration\Message::getLabel('mimes')));
 
 		};
 		
@@ -197,6 +281,16 @@ class Layout {
 
 	public function validate(Array $values, Array $attributes) {
 		
+		foreach ($this->getAttributes() as $name => $attribute) {
+
+			if (!in_array($name, $attributes)) {
+
+				throw new \Exception(Configuration\Message::getLabel('values:bind'));
+
+			};
+
+		};
+
 		if (count($values) != count($attributes)) {
 			throw new \Exception(Configuration\Message::getLabel('values:attrs'));
 		};
@@ -263,15 +357,15 @@ class Layout {
 					
 				};
 
-				if (array_key_exists('maxkbs', $attribute)) {
-	
-					$this->validateFileSizeKB($attribute['maxkbs'], $label, $value);
-					
-				};
-
 				if (array_key_exists('mimes', $attribute)) {
 	
 					$this->validateFileMime($attribute['mimes'], $label, $value);
+					
+				};
+
+				if (array_key_exists('maxkbs', $attribute)) {
+	
+					$this->validateFileSizeKB($attribute['maxkbs'], $label, $value);
 					
 				};
 				

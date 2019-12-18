@@ -27,6 +27,7 @@
 
 /* the example messages below are the default messages */
 
+\PHPBook\Validation\Configuration\Message::setLabel('values:bind', 'You must set all parameters to validate');
 \PHPBook\Validation\Configuration\Message::setLabel('values:attrs', 'The count of values and attributes must match');
 \PHPBook\Validation\Configuration\Message::setLabel('attr:exists', 'The attribute alias {attribute} does not exist');
 \PHPBook\Validation\Configuration\Message::setLabel('type:string', '{label} must be a string');
@@ -44,7 +45,7 @@
 \PHPBook\Validation\Configuration\Message::setLabel('minlength', '{label} must have min {minlength} characters');
 \PHPBook\Validation\Configuration\Message::setLabel('maxlength', '{label} must have max {maxlength} characters');
 \PHPBook\Validation\Configuration\Message::setLabel('options', '{label} must be one of the following options, {options}');
-\PHPBook\Validation\Configuration\Message::setLabel('mimes', '{label} is a not a required file type');
+\PHPBook\Validation\Configuration\Message::setLabel('mimes', '{label} must be a file type {mimes}');
 \PHPBook\Validation\Configuration\Message::setLabel('maxkbs', '{label} max kb size is {maxkbs}');
 
 
@@ -110,7 +111,7 @@ class CustomerValidation {
 			'type' => '@file-buffer',
 			'required' => true,
 			'maxkbs' => 100,
-			'mimes' => ['image']
+			'mimes' => ['image' => 'Image File']
 		])
 		
 		->setAttribute('status', [
@@ -163,7 +164,6 @@ class CustomerValidation {
 		->setRule('ageOfJhon', ['name', 'age'], function($name, $age) {
 			
 			/* rules validations are called after the attributes validation */
-			/* rules are always called in validation, even if you dont call any validation of rules parameters */
 			if (($name) and ($name == 'jhon')) {
 				if (($age) and ($age < 18)) {
 					/* you should throw exception like the basic validation does */
@@ -176,8 +176,7 @@ class CustomerValidation {
 		->setRule('anaCantBeHere', ['name'], function($name) {
 
 			/* rules validations are called after the attributes validation */
-			/* rules are always called in validation, even if you dont call any validation of rules parameters */
-			if (($name) and ($name == 'ana')) {
+			if ($name == 'ana') {
 				/* you should throw exception like the basic validation does */
 				throw new Exception('What are you doing here Ana?');
 			};
@@ -187,8 +186,7 @@ class CustomerValidation {
 		->setRule('statuRequiredForJhon', ['name', 'status'], function($name, $status) {
 
 			/* rules validations are called after the attributes validation */
-			/* rules are always called in validation, even if you dont call any validation of rules parameters */
-			if (($name) and ($name == 'jhon')) {
+			if ($name == 'jhon') {
 				if (!$status) {
 					/* you should throw exception like the basic validation does */
 					throw new Exception('Status is required for Jhon');
@@ -227,7 +225,7 @@ class Customer {
 	
 		/* the validator throws exception when there is an error and variables list will not be returned */
 
-		/* validator uses only the defined parameters to validate, the others will be ignored, unless you have a rule validation for completing the information */
+		/* you must set all the validations parameters otherwise you catch an exception */
 
 		/* Validator provides a uuid attribute option, but the variable value must be null to generate the uuid */
 
@@ -270,6 +268,20 @@ foreach($attributes as $name => $attribute) {
 };
 
 
+/* You can iterate and verbose the attributes */
+
+$customerValidation = new CustomerValidation;
+
+$attributes = $customerValidation->getLayout()->getAttributes();
+
+foreach($attributes as $name => $attribute) {
+
+	$customerValidation->getLayout()->getAttributeVerbose($name); //name must be a string. name must have max 120 characters. name is required
+	
+};
+
+
+
 /* You can iterate the rules */
 
 $customerValidation = new CustomerValidation;
@@ -282,6 +294,9 @@ foreach($rules as $key => $rule) {
 	
 };
 
+
 ?>
 ```
+
+
 - Validation of date, datetime and time follows the international format YYYY-MM-DD H:i:s | YYYY-MM-DD | H:i:s.

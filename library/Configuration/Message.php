@@ -3,6 +3,7 @@
 abstract class Message {
 
 	private static $labels = [
+        'values:bind'   => 'You must set all parameters to validate',
         'values:attrs'  => 'The count of values and attributes must match to validate',
         'attr:exists'   => 'The attribute alias {attribute} does not exist',
         'type:string'   => '{label} must be a string',
@@ -20,8 +21,10 @@ abstract class Message {
         'minlength'     => '{label} needs min {minlength} characteres',
         'maxlength'     => '{label} needs max {maxlength} characteres',
         'options'       => '{label} must be one of the following options, {options}',
+        'mimes'         => '{label} must be a file type {mimes}',
+        'maxkbs'        => '{label} max kb size is {maxkbs}'
     ];
-	
+
 	public static function setLabel(String $name, String $label) {
         if (array_key_exists($name, static::$labels)) {
             static::$labels[$name] = $label;
