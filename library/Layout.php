@@ -71,41 +71,6 @@ class Layout {
 
 		}
 
-
-		/////////
-		$schema = $this->getAttributeSchema($name);
-
-		$verbose = [];
-
-		foreach($schema as $propertie => $value) {
-			switch ($propertie) {
-				case 'required':
-					if ($value) {
-						$verbose[] = str_replace('{label}', $label, Configuration\Message::getLabel('required'));
-					};
-					break;
-				case 'type':
-					$verbose[] = str_replace('{label}', $label, Configuration\Message::getLabel('type:' . $value));
-					break;
-				case 'minlength':
-					$verbose[] = str_replace(['{label}', '{minlength}'], [$label, $value], Configuration\Message::getLabel('minlength'));
-					break;
-				case 'minlength':
-					$verbose[] = str_replace(['{label}', '{minlength}'], [$label, $value], Configuration\Message::getLabel('minlength'));
-					break;
-				case 'maxlength':
-					$verbose[] = str_replace(['{label}', '{maxlength}'], [$label, $value], Configuration\Message::getLabel('maxlength'));
-					break;
-				case 'maxlength':
-					$verbose[] = str_replace(['{label}', '{maxlength}'], [$label, $value], Configuration\Message::getLabel('maxlength'));
-					break;
-				
-			}
-			
-		};
-
-		return implode('. ', $verbose);
-
 	}
 
 	private function generateUUID(): String {
