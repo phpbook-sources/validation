@@ -26,7 +26,7 @@ class Layout {
 
 	public function getAttributeVerbose($name): ?string {
 
-		if (array_key_exists($name, $this->attributes) {
+		if (array_key_exists($name, $this->attributes)) {
 
 			$attributes = $this->attributes[$name];
 
