@@ -24,6 +24,22 @@ class Layout {
 		return $this->rules;
 	}
 
+    public function getRulesVerbose(): ?string {
+
+	    $verbose = [];
+
+        foreach($this->getRules() as $position => $rule) {
+
+            list($ruleName, $ruleAttributes, $ruleClosure) = $rule;
+
+            $verbose[] = $ruleName;
+
+        }
+
+        return count($verbose) > 0 ? implode('. ', $verbose) : 'There is no additional rules';
+
+    }
+
 	public function getAttributeVerbose($name): ?string {
 
 		if (array_key_exists($name, $this->attributes)) {

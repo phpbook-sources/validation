@@ -280,8 +280,6 @@ foreach($attributes as $name => $attribute) {
 	
 };
 
-
-
 /* You can iterate the rules */
 
 $customerValidation = new CustomerValidation;
@@ -293,6 +291,11 @@ foreach($rules as $key => $rule) {
 	list($name, $attributes, $closure) = $rule;
 	
 };
+
+/* You can get the rules verbose */
+
+$customerValidation->getLayout()->getRulesVerbose(); //one string with all the rules descriptions
+
 
 
 ?>
