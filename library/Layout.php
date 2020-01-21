@@ -71,7 +71,11 @@ class Layout {
                         $verbose[] = str_replace(['{label}', '{maxlength}'], [$attributes['label'], $value], \PHPBook\Validation\Configuration\Message::getLabel('maxlength'));
                         break;
                     case 'options':
-                        $verbose[] = str_replace(['{label}', '{options}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('options'));
+                        $valueplay = [];
+                        foreach($value as $keyDisplayer => $displayer) {
+                            $valueplay[] = '(' . $keyDisplayer . ')' .$displayer;
+                        };
+                        $verbose[] = str_replace(['{label}', '{options}'], [$attributes['label'], implode(', ', $valueplay)], \PHPBook\Validation\Configuration\Message::getLabel('options'));
                         break;
                     case 'mimes':
                         $verbose[] = str_replace(['{label}', '{mimes}'], [$attributes['label'], implode(', ', $value)], \PHPBook\Validation\Configuration\Message::getLabel('mimes'));
