@@ -56,7 +56,27 @@ class Layout {
                         };
                         break;
                     case 'type':
-                        $verbose[] = str_replace('{label}', $attributes['label'], \PHPBook\Validation\Configuration\Message::getLabel('type:' . str_replace('@', '', $value)));
+                    	$labeldescription = \PHPBook\Validation\Configuration\Message::getLabel('type:' . str_replace('@', '', $value));
+                    	if (strlen($labeldescription) > 0) {
+                    		switch ($value) {
+	                    		case '@datetime':
+	                    			$extraType = '(Y-m-d H:i:s)';
+	                    			break;
+	                    		case '@date':
+	                    			$extraType = '(Y-m-d)';
+	                    			break;
+	                    		case '@time':
+	                    			$extraType = '(H:i:s)';
+	                    			break;
+	                    		default:
+	                    			$extraType = null;
+	                    			break;
+	                    	}
+                    		$verbose[] = str_replace('{label}', $attributes['label'], $labeldescription) . ($extraType ? ' '.$extraType : '') ;
+                    	}
+                        break;
+                    case 'hints':
+                        $verbose[] = $attributes['hints'];
                         break;
                     case 'min':
                         $verbose[] = str_replace(['{label}', '{min}'], [$attributes['label'], $value], Configuration\Message::getLabel('min'));
@@ -133,24 +153,48 @@ class Layout {
 					};
 				break;
 			case '@date':
-					$date = \DateTime::createFromFormat('Y-m-d', $value);
-					if ((!$date) or ($date->format('Y-m-d') !== $value)) {
-						$error = 'date';
-					};
+					if ($value instanceof \DateTime) {
+						$date = $value;
+					} else {
+						if (is_string($value)) {
+							$date = \DateTime::createFromFormat('Y-m-d', $value);
+							if ((!$date) or ($date->format('Y-m-d') !== $value)) {
+								$error = 'date';
+							};
+						} else {
+							$error = 'date';
+						}
+					}					
 					unset($date);
 				break;
 			case '@datetime':
-					$datetime = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
-					if ((!$datetime) or ($datetime->format('Y-m-d H:i:s') !== $value)) {
-						$error = 'date time';
-					};
+					if ($value instanceof \DateTime) {
+						$datetime = $value;
+					} else {
+						if (is_string($value)) {
+							$datetime = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+							if ((!$datetime) or ($datetime->format('Y-m-d H:i:s') !== $value)) {
+								$error = 'date time';
+							};
+						} else {
+							$error = 'date time';
+						}						
+					}
 					unset($datetime);
 				break;
 			case '@time':
-					$time = \DateTime::createFromFormat('H:i:s', $value);
-					if ((!$time) or ($time->format('H:i:s') !== $value)) {
-						$error = 'time';
-					};
+					if ($value instanceof \DateTime) {
+						$time = $value;
+					} else {
+						if (is_string($value)) {
+							$time = \DateTime::createFromFormat('H:i:s', $value);
+							if ((!$time) or ($time->format('H:i:s') !== $value)) {
+								$error = 'time';
+							};
+						} else {
+							$error = 'time';
+						}
+					}
 					unset($time);
 				break;
 			case '@file-buffer':

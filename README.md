@@ -124,12 +124,14 @@ class CustomerValidation {
 		->setAttribute('friend',  [
 			'label' => 'Friend',
 			'type' => '\App\Module\Friend\Entity',
-			'required' => false,
+			'hints' => 'Friends',
+			'required' => false
 		])
 
 		->setAttribute('friends', [
 			'label' => 'Friends',
 			'type' => '@array:\App\Module\Friend\Entity',
+			'hints' => 'List of Friends'
 		])
 
 		->setAttribute('numbers', [
@@ -301,5 +303,6 @@ $customerValidation->getLayout()->getRulesVerbose(); //one string with all the r
 ?>
 ```
 
+- Validation of date, datetime and time follows the international string format YYYY-MM-DD H:i:s | YYYY-MM-DD | H:i:s 
+- Validation of date, datetime and time enable using DateTime class as value to be validated
 
-- Validation of date, datetime and time follows the international format YYYY-MM-DD H:i:s | YYYY-MM-DD | H:i:s.
