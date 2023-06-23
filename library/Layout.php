@@ -138,7 +138,7 @@ class Layout {
 					};
 				break;
 			case '@integer':
-					if (!is_int((string) $value)) {
+					if (((int) $value != (string) $value) and !is_int((int) $value)) {
 						$error = 'integer';
 					};
 				break;
