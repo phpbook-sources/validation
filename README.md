@@ -32,6 +32,7 @@
 \PHPBook\Validation\Configuration\Message::setLabel('attr:exists', 'The attribute alias {attribute} does not exist');
 \PHPBook\Validation\Configuration\Message::setLabel('type:string', '{label} must be a string');
 \PHPBook\Validation\Configuration\Message::setLabel('type:integer', '{label} must be a integer');
+\PHPBook\Validation\Configuration\Message::setLabel('type:digits', '{label} must be only digits');
 \PHPBook\Validation\Configuration\Message::setLabel('type:float', '{label} must be a float');
 \PHPBook\Validation\Configuration\Message::setLabel('type:boolean', '{label} must be a boolean');
 \PHPBook\Validation\Configuration\Message::setLabel('type:date', '{label} must be a date');
@@ -90,6 +91,13 @@ class CustomerValidation {
 			'required' => true,
 			'min' => 18,
 			'max' => 100
+		])
+
+		->setAttribute('document', [
+			'label' => 'Document',
+			'type' => '@digits',
+			'required' => true,
+			'maxlength' => 15
 		])
 
 		->setAttribute('weight', [

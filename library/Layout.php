@@ -138,8 +138,13 @@ class Layout {
 					};
 				break;
 			case '@integer':
-					if (!ctype_digit((string) $value)) {
+					if (!is_int((string) $value)) {
 						$error = 'integer';
+					};
+				break;
+			case '@digits':
+					if (!ctype_digit((string) $value)) {
+						$error = 'digits';
 					};
 				break;
 			case '@float':
